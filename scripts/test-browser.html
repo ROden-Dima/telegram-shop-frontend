@@ -208,7 +208,7 @@
                 result.description = firstMarker ? text.substring(0, firstMarker.index).trim() : text.trim();
             }
             
-            const priceMatch = text.match(/💰\s*Цена:\s*(\d+(?:\s*\d+)*)\s*томан/i);
+            const priceMatch = text.match(/💰\s*Цена:\s*(\d+(?:\s*\d+)*)\s*руб/i);
             if (priceMatch) {
                 result.price = parseInt(priceMatch[1].replace(/\s+/g, ''), 10);
             }
@@ -249,7 +249,7 @@
                 message_id: 6,
                 caption: `📝 Новый iPhone 15 Pro Max 256GB
 
-💰 Цена: 150000 томан
+💰 Цена: 150000 руб
 📦 Количество: 5 шт
 🏷️ Категория: Электроника`
             },
@@ -257,7 +257,7 @@
                 message_id: 7,
                 text: `📝 Простой товар
 
-💰 Цена: 5000 томан`
+💰 Цена: 5000 руб`
             }
         ];
         
@@ -321,7 +321,7 @@
             addResult('test3', 'Форматирование уведомления', hasAll, notification);
             
             // Тест 4: Добавление ID
-            const original = '📝 Товар\n💰 Цена: 10000 томан';
+            const original = '📝 Товар\n💰 Цена: 10000 руб';
             const withId = addProductIdToMessage(original, 1);
             const hasId = withId.includes('#product_id:1');
             addResult('test4', 'Добавление product_id', hasId, `Исходное:\n${original}\n\nС ID:\n${withId}`);

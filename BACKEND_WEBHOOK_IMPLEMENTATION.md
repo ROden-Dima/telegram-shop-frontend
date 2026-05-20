@@ -23,7 +23,7 @@
       "title": "Название канала"
     },
     "photo": [...],
-    "caption": "📝 Описание товара\n💰 Цена: 15000 томан"
+    "caption": "📝 Описание товара\n💰 Цена: 15000 руб"
   }
 }
 ```
@@ -223,7 +223,7 @@ async function downloadPhotoFromTelegram(photoFileId) {
   const base64 = Buffer.from(photoResponse.data).toString('base64');
   
   // 4. Загрузить через существующий API загрузки фото
-  const uploadResponse = await axios.post(`${API_URL}/api/product_photos`, {
+  const uploadResponse = await axios.post(`${API_URL}/api/upload`, {
     photo_base64: base64
   });
   
@@ -293,7 +293,7 @@ ADD INDEX idx_telegram_message_id (telegram_message_id);
 ```
 📝 Тестовый товар
 
-💰 Цена: 10000 томан
+💰 Цена: 10000 руб
 📦 Количество: 1 шт
 ```
 

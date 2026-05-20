@@ -34,7 +34,7 @@ function OrderList({ loading, orders }: Props) {
 
             <div className="flex flex-col gap-3  ">
               <div className="flex flex-row-reverse gap-1">
-                <span>томан</span>
+                <span>руб</span>
                 <span>{addCommas(item.final_Price)}</span>
                 <span> Цена за единицу :</span>
               </div>
@@ -45,7 +45,7 @@ function OrderList({ loading, orders }: Props) {
               </div>
 
               <div className="flex flex-row-reverse gap-1">
-                <span>томан</span>
+                <span>руб</span>
                 <span>{addCommas(item.final_Price * item.quantity)}</span>
                 <span> Итого :</span>
               </div>
@@ -55,7 +55,7 @@ function OrderList({ loading, orders }: Props) {
       />
       <Divider> Итого Цена </Divider>
       <div>
-        <span>{addCommas(orders?.total_Price || 0)}</span> <span>томан</span>
+        <span>{addCommas(orders?.total_Price || 0)}</span> <span>руб</span>
       </div>
     </>
   );

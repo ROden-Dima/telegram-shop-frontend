@@ -10,7 +10,7 @@
  * 📷 [Фото товара]
  * 
  * 📝 Описание товара
- * 💰 Цена: 15000 томан
+ * 💰 Цена: 15000 руб
  * 📦 Количество: 10 шт
  * 🏷️ Категория: Электроника
  * 📞 Контакт: @username или +1234567890
@@ -74,7 +74,7 @@ export function parseProductMessage(message: any): ParsedProduct | null {
   }
 
   // Парсим цену
-  const priceMatch = text.match(/💰\s*Цена:\s*(\d+(?:\s*\d+)*)\s*томан/i);
+  const priceMatch = text.match(/💰\s*Цена:\s*(\d+(?:\s*\d+)*)\s*руб/i);
   if (priceMatch) {
     // Убираем пробелы и преобразуем в число
     const priceStr = priceMatch[1].replace(/\s+/g, '');
@@ -125,7 +125,7 @@ export function formatProductMessage(product: {
   let text = `📝 ${product.description}\n\n`;
   
   if (product.price) {
-    text += `💰 Цена: ${product.price.toLocaleString('ru-RU')} томан\n`;
+    text += `💰 Цена: ${product.price.toLocaleString('ru-RU')} руб\n`;
   }
   
   if (product.quantity !== undefined) {

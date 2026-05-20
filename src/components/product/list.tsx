@@ -218,31 +218,67 @@ function ProductList({ pageType }: Props) {
               // Безопасная проверка всех полей перед рендерингом
               if (!item || typeof item !== 'object') return null;
               
-              const safeItem = {
-                product_Name: item.product_Name || '',
-                price: typeof item.price === 'number' ? item.price : 0,
-                photo_path: item.photo_path || '',
-                quantity: typeof item.quantity === 'number' ? item.quantity : 0,
-                product_Id: item.product_Id || 0,
-                discountedPrice: typeof item.discountedPrice === 'number' ? item.discountedPrice : (item.price || 0)
-              };
+              // Формируем безопасный объект товара из данных, пришедших с сервера
+const safeItem = {
+  // ID товара (для удаления, редактирования, ключа React)
+  // Берём из item.id, если нет — из item.product_Id, если нет — 0
+  id: item.id || item.product_Id || 0,
+  
+  // Название товара (если нет — пустая строка)
+  product_Name: item.product_Name || '',
+  
+  // Цена (если не число — 0)
+  price: typeof item.price === 'number' ? item.price : 0,
+  
+  // Ссылка на фото (если нет — пустая строка)
+  photo_path: item.photo_path || '',
+  
+  // Количество на складе (если не число — 0)
+  quantity: typeof item.quantity === 'number' ? item.quantity : 0,
+  
+  // ID товара в старом формате (для обратной совместимости)
+  product_Id: item.product_Id || 0,
+  
+  // Цена со скидкой (если нет — обычная цена)
+  discountedPrice: typeof item.discountedPrice === 'number' 
+    ? item.discountedPrice 
+    : (item.price || 0)
+};
               
               return (
-                <ProductItem
-                  key={safeItem.product_Id || Math.random()}
-                  title={safeItem.product_Name}
-                  price={safeItem.price}
-                  imageURL={safeItem.photo_path}
-                  quantity={safeItem.quantity}
-                  product_Id={safeItem.product_Id}
-                  discountedPrice={safeItem.discountedPrice}
-                  pageType={pageType}
-                  url={
-                    pageType === "admin"
-                      ? `/admin/products/${safeItem.product_Id}`
-                      : `/products/${safeItem.product_Id}`
-                  }
-                />
+               <ProductItem
+  // Уникальный ключ для React (нужен для правильного обновления списка)
+  key={safeItem.id || Math.random()}
+  
+  // Название товара
+  title={safeItem.product_Name}
+  
+  // Цена товара
+  price={safeItem.price}
+  
+  // Ссылка на фото (берем из photo_path, который добавили в бэкенд)
+  imageURL={safeItem.photo_path}
+  
+  // Количество на складе
+  quantity={safeItem.quantity}
+  
+  // ID товара (используется для удаления и редактирования)
+  // Берем из поля id, которое приходит с сервера
+  product_Id={safeItem.id}
+  
+  // Цена со скидкой (если есть)
+  discountedPrice={safeItem.discountedPrice}
+  
+  // Тип страницы: "admin" или "user" (определяет, показывать ли кнопки)
+  pageType={pageType}
+  
+  // Ссылка для перехода при клике на карточку
+  url={
+    pageType === "admin"
+      ? `/admin/products/${safeItem.id}`   // Для админа — страница редактирования
+      : `/products/${safeItem.id}`          // Для пользователя — страница товара
+  }
+/>
               );
             })}
           </>

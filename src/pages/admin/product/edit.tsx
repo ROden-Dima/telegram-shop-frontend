@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable operator-linebreak */
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable camelcase */
 import Container from "@components/container";
-import Discount from "@components/discount";
+import SimpleUpload from "@components/SimpleUpload";
 import { useGetCategories } from "@framework/api/categories/get";
-import useAddProductImage from "@framework/api/photos-upload/add";
 import useDeleteProduct from "@framework/api/product/delete";
 import { useGetProductsById } from "@framework/api/product/get-by-id";
 import useUpdateProduct from "@framework/api/product/update";
@@ -22,13 +21,11 @@ import {
   TreeSelect
 } from "antd";
 import { useEffect, useState } from "react";
-import ImageUploading from "react-images-uploading";
 import { useNavigate, useParams } from "react-router";
 
 const { TextArea } = Input;
+
 function Edit() {
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(false);
-  // const [priceEnterd, setPriceEnterd] = useState<number>(0);
   const { product_id } = useParams();
   const {
     data: categoriesData,
@@ -47,292 +44,188 @@ function Edit() {
   const id = telegramUser?.id;
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const mutationUploadPhotos = useAddProductImage();
   const [imageLinkList, setImageLinkList] = useState<Array<string>>([]);
-  const [images, setImages] = useState([]);
-  const [hasDiscount, sethasDiscount] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const deleteMutation = useDeleteProduct();
-  const onChangeImage = async (imageList) => {
-    // data for submit
-    imageList.length &&
-      (await imageList.map(async (i: { data_url: string }) => {
-        mutationUploadPhotos.mutate(
-          { photo_base64: i.data_url.split(",")[1] },
-          {
-            onSuccess: (e) => {
-              // console.log(`${import.meta.env.VITE_API_URL}/${e.data}`);
-              // console.log("upload done");
-              if (imageLinkList) {
-                setImageLinkList([...imageLinkList, `${e.data}`]);
-              } else {
-                setImageLinkList([`${e.data}`]);
-              }
-            },
-            onError: () => {
-              message.error("Добавить фото с Ошибка столкнуться стал");
-            }
-          }
-        );
-      }));
-    setImages(imageList);
-  };
-  const handleRemoveSingleImage = (idx) => {
-    const arr = [...imageLinkList];
-    if (idx !== -1) {
-      arr.splice(idx, 1);
-      setImageLinkList(arr);
-    }
-  };
-  useEffect(() => {
-    catRefetch();
-    productRefetch();
-  }, []);
-  useEffect(() => {
-    setComponentDisabled(isProductLoading || isProductFetching);
-  }, [isProductLoading, isProductFetching]);
 
   useEffect(() => {
-    if (!componentDisabled) {
-      setImageLinkList(productData?.photos);
+    setIsMounted(true);
+    catRefetch();
+    productRefetch();
+    return () => setIsMounted(false);
+  }, []);
+
+  useEffect(() => {
+    if (productData?.photos && Array.isArray(productData.photos)) {
+      setImageLinkList(productData.photos);
     }
-  }, [componentDisabled]);
-  // console.log(imageLinkList);
-  const onChange = (value: any) => {
-    // console.log(value);
+  }, [productData]);
+
+  const handleImageUpload = (imageUrl: string) => {
+    setImageLinkList(prev => [...prev, imageUrl]);
   };
+
+  const handleRemoveSingleImage = (idx: number) => {
+    const arr = [...imageLinkList];
+    arr.splice(idx, 1);
+    setImageLinkList(arr);
+  };
+
   const handleDeleteProduct = () => {
     deleteMutation.mutate(
       { product_id, user_id: id },
       {
-        onSuccess: (e) => {
-          message.success("Товар с успех Удалено ");
+        onSuccess: () => {
+          message.success("Товар успешно удалён");
           navigate("/admin/products");
         },
         onError: () => {
-          message.error("Ошибка при удалении товара. Попробуйте снова");
+          message.error("Ошибка при удалении товара");
         }
       }
     );
   };
 
+  if (isProductLoading || !isMounted) {
+    return (
+      <Container backwardUrl="/admin/products" title="Редактирование товара">
+        <div className="flex justify-center items-center h-64">
+          <Spin size="large" tip="Загрузка..." />
+        </div>
+      </Container>
+    );
+  }
+
   return (
-    <Container backwardUrl="/admin/products" title="Обновление товара">
-      <Spin spinning={componentDisabled} tip="Загрузка...">
-        {componentDisabled ? (
-          <div className="h-screen" />
-        ) : (
-          <>
-            <Form
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 20 }}
-              layout="horizontal"
-              initialValues={{
-                description: productData?.description,
-                product_name: productData?.product_Name,
-                price: productData?.price,
-                quantity: productData?.quantity,
-                category_ids: productData?.categoryIds
-              }}
-              disabled={componentDisabled}
-              onFinish={({
-                category_ids,
-                description,
-                price,
-                product_name,
-                quantity
-              }: TypeProductPost) => {
-                mutation.mutate(
-                  {
-                    category_ids:
-                      typeof category_ids === "number"
-                        ? [category_ids]
-                        : category_ids || [],
-                    description,
-                    photos: imageLinkList || [],
-                    price,
-                    product_name,
-                    quantity,
-                    user_id: id.toString()
-                  },
-                  {
-                    onSuccess: () => {
-                      message.success("Ваш товар успешно обновлен");
-                      form.resetFields();
-                      navigate("/admin/products");
-                    },
-                    onError: (err) => {
-                      console.log(err);
-                    }
-                  }
-                );
-              }}>
-              <Form.Item name="product_name" required label="Название товара">
-                <Input required />
-              </Form.Item>
-              <Form.Item name="category_ids" required label="Категория">
-                {/* <Cascader
-                style={{ width: "100%" }}
-                options={categoriesData}
-                onChange={onChange}
-                multiple={false}
-                changeOnSelect
-                maxTagCount="responsive"
-                loading={isCatLoading || isCatFetching}
-                fieldNames={{
-                  label: "category_Name",
-                  value: "category_Id",
-                  children: "children"
-                }}
-              /> */}
-                <TreeSelect
-                  showSearch
-                  showCheckedStrategy="SHOW_PARENT"
-                  treeData={categoriesData}
-                  loading={isCatLoading || isCatFetching}
-                  onChange={(e) => console.log(e)}
-                  treeLine
-                  style={{
-                    width: "100%"
-                  }}
-                  fieldNames={{
-                    label: "category_Name",
-                    value: "category_Id",
-                    key: "category_Id",
-                    children: "children"
-                  }}
+    <Container backwardUrl="/admin/products" title="Редактирование товара">
+      <Form
+        form={form}
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 20 }}
+        layout="horizontal"
+        initialValues={{
+          description: productData?.description,
+          product_name: productData?.product_Name,
+          price: productData?.price,
+          quantity: productData?.quantity,
+          category_ids: productData?.categoryIds
+        }}
+        onFinish={(values: TypeProductPost) => {
+          mutation.mutate(
+            {
+              category_ids:
+                typeof values.category_ids === "number"
+                  ? [values.category_ids]
+                  : values.category_ids || [],
+              description: values.description,
+              photos: imageLinkList || [],
+              price: values.price,
+              product_name: values.product_name,
+              quantity: values.quantity,
+              user_id: id?.toString() || ""
+            },
+            {
+              onSuccess: () => {
+                message.success("Товар успешно обновлён");
+                navigate("/admin/products");
+              },
+              onError: (err) => {
+                message.error(err?.response?.data?.title || "Ошибка обновления");
+              }
+            }
+          );
+        }}>
+        
+        <Form.Item name="product_name" required label="Название товара">
+          <Input required />
+        </Form.Item>
+        
+        <Form.Item name="category_ids" label="Категория">
+          <TreeSelect
+            showSearch
+            showCheckedStrategy="SHOW_PARENT"
+            treeData={categoriesData}
+            loading={isCatLoading || isCatFetching}
+            treeLine
+            style={{ width: "100%" }}
+            fieldNames={{
+              label: "category_Name",
+              value: "category_Id",
+              key: "category_Id",
+              children: "children"
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item label="Цена (₽)" required name="price">
+          <InputNumber
+            formatter={(value) =>
+              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            }
+            parser={(value) => value?.replace(/\$\s?|(,*)/g, "") || ""}
+            required
+            className="w-1/2"
+          />
+        </Form.Item>
+
+        <Form.Item label="Количество на складе" required name="quantity">
+          <InputNumber required type="number" className="w-1/2" />
+        </Form.Item>
+
+        <Form.Item label="Описание" required name="description">
+          <TextArea required rows={10} />
+        </Form.Item>
+
+        <Form.Item className="mb-14 w-full" label="Фото товара">
+          <SimpleUpload onUploadSuccess={handleImageUpload} />
+          
+          <div className="grid h-[240px] w-full grid-cols-2 gap-3 mt-3 overflow-auto">
+            {imageLinkList.map((image, index) => (
+              <div key={index} className="relative h-24 w-36 rounded-lg">
+                <img
+                  src={image}
+                  alt=""
+                  className="h-full w-full rounded-lg object-cover"
                 />
-              </Form.Item>
-
-              <Form.Item label="Цена (томан) " required name="price">
-                <InputNumber
-                  required
-                  // onChange={(e) => setPriceEnterd(e || productData?.price)}
-                  formatter={(value) =>
-                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                  }
-                  parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                  className="w-1/2"
-                />
-              </Form.Item>
-              {/* <div className="-mt-4">
-              {numberToWords(priceEnterd)} <b>томан</b>
-            </div> */}
-              <Form.Item label="Количество на складе" required name="quantity">
-                <InputNumber required type="number" className="w-1/2" />
-              </Form.Item>
-
-              <Form.Item label="Описание" required name="description">
-                <TextArea rows={10} />
-              </Form.Item>
-
-              <Form.Item
-                className="w-full"
-                name="photos"
-                label="Фото товара"
-                valuePropName="photos">
-                {mutationUploadPhotos.isLoading ? (
-                  <Spin spinning />
-                ) : (
-                  <ImageUploading
-                    value={images}
-                    onChange={onChangeImage}
-                    maxNumber={4}
-                    dataURLKey="data_url">
-                    {({
-                      onImageUpload,
-                      onImageRemoveAll,
-                      onImageRemove,
-                      isDragging,
-                      dragProps
-                    }) => (
-                      // write your building UI
-                      <div className="upload__image-wrapper flex flex-col">
-                        <div className="mb-5 flex h-[60px]  w-full">
-                          <button
-                            style={isDragging ? { color: "red" } : undefined}
-                            onClick={onImageUpload}
-                            type="button"
-                            className="h-full w-full border-[1px] border-dashed"
-                            {...dragProps}>
-                            Добавить фото
-                          </button>
-                          &nbsp;
-                          <button
-                            className="h-full w-20 bg-red-600 "
-                            type="button"
-                            onClick={() => {
-                              onImageRemoveAll();
-                              setImageLinkList([]);
-                            }}>
-                            Удалить все
-                          </button>
-                        </div>
-                        <div className="grid h-[240px] w-full grid-cols-2 grid-rows-2  gap-y-7 overflow-x-auto overflow-y-scroll  ">
-                          {(imageLinkList || []).map((image, index) => (
-                            <div key={index} className=" h-36 w-36 rounded-lg">
-                              <img
-                                src={`${import.meta.env.VITE_API_URL}/${image}`}
-                                alt=""
-                                className="h-full w-full rounded-lg "
-                              />
-                              <div className="mt-2 flex justify-between gap-3">
-                                <Button
-                                  danger
-                                  className="w-full"
-                                  htmlType="button"
-                                  onClick={() => {
-                                    handleRemoveSingleImage(index);
-                                    // onImageRemove(index)
-                                  }}>
-                                  Удалить
-                                </Button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </ImageUploading>
-                )}
-              </Form.Item>
-
-              <div className="flex gap-3">
-                <Popconfirm
-                  placement="top"
-                  title="Удалить этот товар?"
-                  onConfirm={() => handleDeleteProduct()}
-                  okText="Удалить"
-                  okType="default"
-                  cancelText="Отменить">
-                  <Button
-                    size="large"
-                    loading={deleteMutation.isLoading}
-                    style={{ width: "36%" }}
-                    danger>
-                    Удалить Товар
-                  </Button>
-                </Popconfirm>
                 <Button
-                  type="primary"
-                  loading={mutation.isLoading}
-                  style={{ width: "65%" }}
-                  size="large"
-                  ghost
-                  // className="sticky bottom-3"
-                  htmlType="submit">
-                  Сохранить
+                  danger
+                  size="small"
+                  className="absolute top-1 right-1"
+                  onClick={() => handleRemoveSingleImage(index)}>
+                  ✕
                 </Button>
               </div>
-            </Form>
-            <Discount
-              data={productData?.discount}
-              id={product_id}
-              type="product"
-            />
-          </>
-        )}
-      </Spin>
+            ))}
+          </div>
+        </Form.Item>
+
+        <div className="flex gap-3">
+          <Popconfirm
+            placement="top"
+            title="Удалить этот товар?"
+            onConfirm={handleDeleteProduct}
+            okText="Удалить"
+            cancelText="Отменить">
+            <Button
+              size="large"
+              loading={deleteMutation.isLoading}
+              style={{ width: "36%" }}
+              danger>
+              Удалить товар
+            </Button>
+          </Popconfirm>
+          <Button
+            type="primary"
+            loading={mutation.isLoading}
+            style={{ width: "65%" }}
+            size="large"
+            ghost
+            htmlType="submit">
+            Сохранить
+          </Button>
+        </div>
+      </Form>
     </Container>
   );
 }

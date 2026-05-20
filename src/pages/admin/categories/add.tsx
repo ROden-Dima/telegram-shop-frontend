@@ -76,7 +76,7 @@ function CategoriesAdd() {
         </Form.Item>
          */}
         {/*
-        <Form.Item label="Скидка (томан) " name="quantity">
+        <Form.Item label="Скидка (руб) " name="quantity">
         <InputNumber className="w-full" type="number" />
       </Form.Item> */}
 

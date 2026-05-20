@@ -119,7 +119,7 @@ function Checkout() {
                 <span>
                   Сумма перевода:
                   <b className="mr-2 gap-3 text-lg">
-                    {addCommas(CartData?.totalPrice) || 0} <span>томан</span>
+                    {addCommas(CartData?.totalPrice) || 0} <span>руб</span>
                   </b>
                 </span>
               </div>

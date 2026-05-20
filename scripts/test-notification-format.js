@@ -36,7 +36,7 @@ const testData = {
   productId: 1,
   originalMessage: `📝 Новый iPhone 15 Pro Max
 
-💰 Цена: 150000 томан
+💰 Цена: 150000 руб
 📦 Количество: 5 шт
 🏷️ Категория: Электроника`
 };

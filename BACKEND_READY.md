@@ -123,7 +123,7 @@ curl -X POST "https://api.telegram.org/bot<TOKEN>/setWebhook" \
 ```
 📝 Тестовый товар
 
-💰 Цена: 10000 томан
+💰 Цена: 10000 руб
 ```
 
 2. **Проверьте логи приложения:**
@@ -180,7 +180,7 @@ curl -X POST http://localhost:3000/api/telegram/webhook \
     "channel_post": {
       "message_id": 123,
       "chat": {"id": -1003271699368},
-      "caption": "📝 Тест\n💰 Цена: 10000 томан"
+      "caption": "📝 Тест\n💰 Цена: 10000 руб"
     }
   }'
 ```

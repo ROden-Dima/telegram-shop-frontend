@@ -1,47 +1,56 @@
-/* eslint-disable operator-linebreak */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/jsx-one-expression-per-line */
-import { addCommas } from "@persian-tools/persian-tools";
-import { useNavigate } from "react-router";
-
-interface Props {
-  url: string;
-  title: string;
-  price: number;
-  quantity: number;
-  imageURL: string | Array<string>;
-  pageType: "admin" | "user";
-  discountedPrice: number;
-}
+//* eslint-disable jsx-a11y/no-static-element-interactions */
+import { Button } from "antd";
 
 function ProductItem({
-  url,
   title,
   price,
-  quantity,
+  discountedPrice,
   imageURL,
+  quantity,
+  product_Id,
   pageType,
-  discountedPrice
-}: Props) {
-  const navigate = useNavigate();
+  onClick,
+  addCommas
+}: any) {
+  const safePrice = price || 0;
+  const safeDiscountedPrice = discountedPrice || price || 0;
+  const finalPrice = discountedPrice ? Math.round((1 - discountedPrice / price) * 100) : 0;
 
   const handleClick = () => {
-    if (navigate && typeof navigate === 'function' && url) {
+    if (onClick && pageType !== "admin") {
+      onClick();
+    }
+  };
+
+  const handleDelete = async (e: any) => {
+    e.stopPropagation();
+    console.log('Удаляем товар с ID:', product_Id, 'тип:', typeof product_Id);
+    if (confirm('Удалить этот товар?')) {
       try {
-        navigate(url);
-      } catch (err) {
-        console.error('Navigation error:', err);
+        const response = await fetch(`http://localhost:3001/api/products/${product_Id}`, {
+          method: 'DELETE',
+        });
+        const data = await response.json();
+        console.log('Ответ сервера:', data);
+        if (data.success) {
+          alert('Товар удалён');
+          window.location.reload();
+        } else {
+          alert('Ошибка: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Ошибка при удалении:', error);
+        alert('Ошибка при удалении');
       }
     }
   };
-  // Безопасный расчет скидки
-  const safePrice = typeof price === 'number' && price > 0 ? price : 0;
-  const safeDiscountedPrice = typeof discountedPrice === 'number' && discountedPrice > 0 ? discountedPrice : safePrice;
-  const finalPrice = safeDiscountedPrice !== safePrice && safePrice > 0 
-    ? Math.round(100 - (safeDiscountedPrice * 100) / safePrice) 
-    : null;
+
+  const handleEdit = (e: any) => {
+    e.stopPropagation();
+    window.location.href = `/admin/products/edit/${product_Id}`;
+  };
+
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       onClick={handleClick}
       className={`flex flex-col w-full overflow-hidden rounded-lg border border-gray-300 bg-white shadow-sm cursor-pointer transition-all hover:shadow-md ${
@@ -52,7 +61,7 @@ function ProductItem({
       <div
         className="relative w-full bg-gray-100 bg-cover bg-center"
         style={{
-          backgroundImage: imageURL ? `url('${import.meta.env.VITE_API_URL || ''}/${imageURL}')` : 'none',
+          backgroundImage: imageURL ? `url('${imageURL.startsWith('http') ? imageURL : `${import.meta.env.VITE_API_URL || ''}/${imageURL}`}')` : 'none',
           aspectRatio: '1 / 1',
           minHeight: '160px'
         }}>
@@ -82,14 +91,14 @@ function ProductItem({
             <>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-500 line-through">
-                  {addCommas && typeof addCommas === 'function' ? addCommas(safePrice) : safePrice} томан
+                  {addCommas && typeof addCommas === 'function' ? addCommas(safePrice) : safePrice} руб.
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-base font-semibold text-gray-900">
                   {addCommas && typeof addCommas === 'function' ? addCommas(safeDiscountedPrice) : safeDiscountedPrice}
                 </span>
-                <span className="text-sm text-gray-600">томан</span>
+                <span className="text-sm text-gray-600">руб</span>
               </div>
             </>
           ) : (
@@ -97,10 +106,29 @@ function ProductItem({
               <span className="text-base font-semibold text-gray-900">
                 {addCommas && typeof addCommas === 'function' ? addCommas(safePrice) : safePrice}
               </span>
-              <span className="text-sm text-gray-600">томан</span>
+              <span className="text-sm text-gray-600">руб</span>
             </div>
           )}
         </div>
+
+        {/* ===== КНОПКИ ДЛЯ АДМИН-ПАНЕЛИ ===== */}
+        {pageType === "admin" && (
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={handleEdit}
+              className="flex-1 bg-blue-500 text-white py-1.5 px-3 rounded-lg text-sm font-medium hover:bg-blue-600 transition"
+            >
+              Редактировать
+            </button>
+            <button
+              onClick={handleDelete}
+              className="flex-1 bg-red-500 text-white py-1.5 px-3 rounded-lg text-sm font-medium hover:bg-red-600 transition"
+            >
+              Удалить
+            </button>
+          </div>
+        )}
+        {/* ===== КОНЕЦ КНОПОК ===== */}
       </div>
     </div>
   );

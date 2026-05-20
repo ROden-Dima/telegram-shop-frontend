@@ -60,11 +60,11 @@ function Card({
             className={`flex flex-row gap-3 self-end text-right ${
               finalPrice && " text-sm text-gray-500 line-through"
             }`}>
-            <span>томан</span> <span>{addCommas && typeof addCommas === 'function' ? addCommas(safePrice) : safePrice}</span>
+            <span>руб</span> <span>{addCommas && typeof addCommas === 'function' ? addCommas(safePrice) : safePrice}</span>
           </div>
           {finalPrice && (
             <div className="flex flex-row gap-3 self-end text-right">
-              <span>томан</span> <span>{addCommas && typeof addCommas === 'function' ? addCommas(safeDiscountedPrice) : safeDiscountedPrice}</span>
+              <span>руб</span> <span>{addCommas && typeof addCommas === 'function' ? addCommas(safeDiscountedPrice) : safeDiscountedPrice}</span>
             </div>
           )}
           {/* <div className="self-start text-left">Количество :{quantity} шт</div> */}

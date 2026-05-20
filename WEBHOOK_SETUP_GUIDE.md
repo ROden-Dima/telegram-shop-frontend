@@ -232,7 +232,7 @@ curl "https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo"
 ```
 📝 Тестовый товар
 
-💰 Цена: 10000 томан
+💰 Цена: 10000 руб
 📦 Количество: 1 шт
 ```
 

@@ -208,7 +208,7 @@ curl -X POST http://localhost:3000/api/telegram/webhook \
     "channel_post": {
       "message_id": 123,
       "chat": {"id": -1003271699368},
-      "caption": "📝 Тестовый товар\n💰 Цена: 10000 томан"
+      "caption": "📝 Тестовый товар\n💰 Цена: 10000 руб"
     }
   }'
 ```

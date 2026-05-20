@@ -9,7 +9,7 @@ const useAddProductImage = () =>
   useMutation({
     mutationKey: ["add-Product-image"],
     mutationFn: ({ photo_base64 }: TypeProductPhotos) =>
-      Api.post("/product_photos", { photo_base64 })
+      Api.post("/upload", { photo_base64 })
   });
 
 export default useAddProductImage;

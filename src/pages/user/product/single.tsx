@@ -174,11 +174,11 @@ function ProductSingle() {
               className={`flex flex-row items-center gap-2 self-end text-right ${
                 finalPrice && " text-gray-500 line-through"
               }`}>
-              <span>томан</span> <span>{addCommas && typeof addCommas === 'function' ? addCommas(safePrice) : safePrice}</span>
+              <span>руб</span> <span>{addCommas && typeof addCommas === 'function' ? addCommas(safePrice) : safePrice}</span>
             </div>
             {finalPrice && (
               <div className="flex flex-row items-center gap-2 self-end text-right">
-                <span>томан</span>{" "}
+                <span>руб</span>{" "}
                 <span>{addCommas && typeof addCommas === 'function' ? addCommas(safeDiscountedPrice) : safeDiscountedPrice}</span>
               </div>
             )}

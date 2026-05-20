@@ -1,9 +1,10 @@
 import axios from "axios"
 
-const { VITE_API_URL } = import.meta.env
+// Временно жёстко прописываем адрес бэкенда
+const API_BASE_URL = 'http://localhost:3001/api'
 
 const Api = axios.create({
-  baseURL: VITE_API_URL ? `${VITE_API_URL}/api` : '/api',
+ baseURL: 'https://telegram-shop-backend-bbyp.onrender.com/api',
   headers: {
     Accept: "*/*"
   },

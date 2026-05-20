@@ -1,67 +1,48 @@
-/** @type {import('vite').UserConfig} */
-
+// Импортируем необходимые плагины и функции
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+// https://vitejs.dev/config/
 export default defineConfig({
+  // Плагины для поддержки React и путей из tsconfig.json
   plugins: [
-    react({
-      // Оптимизация React для production
-      jsxRuntime: 'automatic'
-    }),
-    tsconfigPaths()
+    react(),          // Добавляет поддержку JSX и React Fast Refresh
+    tsconfigPaths()   // Позволяет использовать алиасы путей из tsconfig.json
   ],
+
+  // Настройка сервера для разработки (не влияет на итоговую сборку)
   server: {
-    open: false,
-    port: 3000
+    port: 3000,       // Локальный порт для разработки
+    open: false       // Не открывать браузер автоматически
   },
+
+  // Настройки сборки проекта
   build: {
-    outDir: "dist",
-    assetsDir: "assets",
-    sourcemap: false,
-    // Оптимизация размера бандла
-    chunkSizeWarningLimit: 1000,
-    // Code splitting для лучшей производительности
+    outDir: "dist",   // Папка, куда Vite сохранит готовый сайт
+    assetsDir: "assets", // Папка для статических файлов (css, js, img)
+    sourcemap: false, // Не создавать карты кода (для уменьшения размера)
+    minify: 'terser', // Минифицировать код (удалять пробелы, сокращать имена)
+    
+    // Дополнительная оптимизация для уменьшения размера бандла
     rollupOptions: {
       output: {
+        // Ручное разделение кода на чанки (пакеты) для оптимизации загрузки
         manualChunks: {
-          // Выделяем vendor библиотеки в отдельные чанки
-          'react-vendor': ['react', 'react-dom', 'react-router', 'react-router-dom'],
+          // Все библиотеки React в один файл
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // Все компоненты Ant Design в один файл
           'antd-vendor': ['antd', '@ant-design/icons'],
+          // Библиотеки для работы с данными и запросами
           'query-vendor': ['@tanstack/react-query'],
+          // Библиотеки для интеграции с Telegram
           'telegram-vendor': ['@vkruglikov/react-telegram-web-app', 'react-telegram-webapp']
-        },
-        // Оптимизация имен файлов для кеширования
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
+        }
       }
-    },
-    // Минификация и оптимизация
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Удаляем console.log в production
-        drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug']
-      }
-    },
-    // Оптимизация CSS
-    cssCodeSplit: true,
-    // Увеличиваем лимит для предупреждений
-    reportCompressedSize: false // Ускоряет сборку
+    }
   },
-  base: "/",
-  // Оптимизация зависимостей
-  optimizeDeps: {
-    include: [
-      'react',
-      'react-dom',
-      'react-router-dom',
-      '@tanstack/react-query',
-      'antd',
-      '@ant-design/icons'
-    ]
-  }
+
+  // Базовый путь для всех ассетов на сайте. 
+  // Ключевой параметр для корректной работы маршрутизации в SPA.
+  base: "/"
 });

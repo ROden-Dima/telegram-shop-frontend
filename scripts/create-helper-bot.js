@@ -76,7 +76,7 @@ function handleDescription(userId, description) {
   userStates[userId] = STATES.WAITING_PRICE;
   
   return {
-    text: `✅ Описание сохранено: "${description}"\n\n💰 Укажите цену в томанах (только число)`,
+    text: `✅ Описание сохранено: "${description}"\n\n💰 Укажите цену в рубах (только число)`,
     reply_markup: {
       inline_keyboard: [[
         { text: '❌ Отменить', callback_data: 'cancel' }
@@ -97,7 +97,7 @@ function handlePrice(userId, priceText) {
   
   if (isNaN(price) || price <= 0) {
     return {
-      text: '❌ Неверный формат цены. Укажите число больше 0.\n\n💰 Укажите цену в томанах:'
+      text: '❌ Неверный формат цены. Укажите число больше 0.\n\n💰 Укажите цену в рубах:'
     };
   }
   
@@ -105,7 +105,7 @@ function handlePrice(userId, priceText) {
   userStates[userId] = STATES.WAITING_QUANTITY;
   
   return {
-    text: `✅ Цена: ${price.toLocaleString('ru-RU')} томан\n\n📦 Укажите количество на складе (только число)`,
+    text: `✅ Цена: ${price.toLocaleString('ru-RU')} руб\n\n📦 Укажите количество на складе (только число)`,
     reply_markup: {
       inline_keyboard: [[
         { text: '❌ Отменить', callback_data: 'cancel' }
@@ -201,7 +201,7 @@ function handleContact(userId, contact) {
 ━━━━━━━━━━━━━━━━━━━━
 📷 Фото: ${data.photoFileId ? '✅' : '❌'}
 📝 Описание: ${data.description || 'НЕТ'}
-💰 Цена: ${data.price ? data.price.toLocaleString('ru-RU') + ' томан' : 'НЕТ'}
+💰 Цена: ${data.price ? data.price.toLocaleString('ru-RU') + ' руб' : 'НЕТ'}
 📦 Количество: ${data.quantity !== undefined ? data.quantity + ' шт' : 'НЕТ'}
 🏷️ Категория: ${data.categoryName || 'НЕТ'}
 📞 Контакт: ${data.contact || 'НЕТ'}
@@ -233,7 +233,7 @@ function formatChannelMessage(data) {
   let text = `📝 ${data.description}\n\n`;
   
   if (data.price) {
-    text += `💰 Цена: ${data.price.toLocaleString('ru-RU')} томан\n`;
+    text += `💰 Цена: ${data.price.toLocaleString('ru-RU')} руб\n`;
   }
   
   if (data.quantity !== undefined) {

@@ -96,7 +96,7 @@ function Cart() {
                   description={
                     <div className="flex flex-col gap-3  ">
                       <div className="flex flex-row gap-1">
-                        <span>томан</span>
+                        <span>руб</span>
                         <span>{addCommas(item.discountedPrice)}</span>
                         <span>: Цена за единицу</span>
                       </div>
@@ -107,7 +107,7 @@ function Cart() {
                       </div>
 
                       <div className="flex flex-row gap-1">
-                        <span>томан</span>
+                        <span>руб</span>
                         <span>
                           {addCommas(item.discountedPrice * item.quantity)}
                         </span>
@@ -159,7 +159,7 @@ function Cart() {
             <p className="flex w-full flex-row-reverse items-center justify-center gap-2">
               <span>Итого </span>
               <span>{addCommas(data?.totalPrice)}</span>
-              <span>томан</span>
+              <span>руб</span>
             </p>
           </div>
 

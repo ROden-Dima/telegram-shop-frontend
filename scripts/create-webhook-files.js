@@ -65,7 +65,7 @@ function parseProductMessage(message) {
   }
 
   // Парсим цену
-  const priceMatch = text.match(/💰\\s*Цена:\\s*(\\d+(?:\\s*\\d+)*)\\s*томан/i);
+  const priceMatch = text.match(/💰\\s*Цена:\\s*(\\d+(?:\\s*\\d+)*)\\s*руб/i);
   if (priceMatch) {
     const priceStr = priceMatch[1].replace(/\\s+/g, '');
     result.price = parseInt(priceStr, 10);
