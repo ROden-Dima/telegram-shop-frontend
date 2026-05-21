@@ -50,8 +50,9 @@ function ProductItem({
     if (confirm('Удалить этот товар?')) {
       try {
         // Отправляем DELETE запрос на сервер
-        const response = await fetch(`/api/products/${product_Id}`, {
-          method: 'DELETE',
+        const response = await fetch(`https://telegram-shop-backend-bbyp.onrender.com/api/products/${product_Id}`, {
+        method: 'DELETE',
+          });
         });
         const data = await response.json();
         
