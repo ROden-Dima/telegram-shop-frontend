@@ -172,26 +172,26 @@ function ProductItem({
     }} style={{ width: '40px', height: '40px', fontSize: '20px', background: '#e9ecef', border: 'none', borderRadius: '12px', cursor: 'pointer' }}>−</button>
     
     <input 
-  id="quantityInput" 
-  type="number" 
-  min="1" 
-  max="99" 
-  defaultValue="1" 
-  style={{ 
-    width: '80px', 
-    height: '40px', 
-    textAlign: 'center',
-    padding: '0',
-    fontSize: '18px',
-    fontWeight: '500',
-    border: '1px solid #ccc', 
-    borderRadius: '10px',
-    outline: 'none',
-    appearance: 'textfield',
-    WebkitAppearance: 'none',
-    MozAppearance: 'textfield'
-  }} 
-/>  
+      id="quantityInput" 
+      type="number" 
+      min="1" 
+      max="99" 
+      defaultValue="1" 
+      style={{ 
+        width: '80px', 
+        height: '40px', 
+        textAlign: 'center',
+        padding: '0',
+        fontSize: '18px',
+        fontWeight: '500',
+        border: '1px solid #ccc', 
+        borderRadius: '10px',
+        outline: 'none',
+        appearance: 'textfield',
+        WebkitAppearance: 'none',
+        MozAppearance: 'textfield'
+      }} 
+    />
     
     <button onClick={() => {
       const input = document.getElementById('quantityInput') as HTMLInputElement;
