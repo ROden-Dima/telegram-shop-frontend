@@ -162,7 +162,7 @@ function ProductItem({
               </div>
               
               <div style={{ marginBottom: '20px' }}>
-  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
+  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', textAlign: 'center' }}>
     Количество:
   </label>
   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'center' }}>
@@ -171,27 +171,37 @@ function ProductItem({
       if (input) input.value = Math.max(1, parseInt(input.value) - 1).toString();
     }} style={{ width: '40px', height: '40px', fontSize: '20px', background: '#e9ecef', border: 'none', borderRadius: '12px', cursor: 'pointer' }}>−</button>
     
-    <input 
-      id="quantityInput" 
-      type="number" 
-      min="1" 
-      max="99" 
-      defaultValue="1" 
-      style={{ 
-        width: '80px', 
-        height: '40px', 
-        textAlign: 'center',
-        padding: '0',
-        fontSize: '18px',
-        fontWeight: '500',
-        border: '1px solid #ccc', 
-        borderRadius: '10px',
-        outline: 'none',
-        appearance: 'textfield',
-        WebkitAppearance: 'none',
-        MozAppearance: 'textfield'
-      }} 
-    />
+    {/* Оборачиваем input в div с flex-центровкой */}
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      width: '70px',
+      height: '40px',
+      border: '1px solid #ccc', 
+      borderRadius: '10px',
+      background: 'white'
+    }}>
+      <input 
+        id="quantityInput" 
+        type="number" 
+        min="1" 
+        max="99" 
+        defaultValue="1" 
+        style={{ 
+          width: '100%',
+          height: '100%',
+          textAlign: 'center',
+          border: 'none',
+          outline: 'none',
+          fontSize: '18px',
+          fontWeight: '500',
+          appearance: 'textfield',
+          WebkitAppearance: 'none',
+          MozAppearance: 'textfield'
+        }} 
+      />
+    </div>
     
     <button onClick={() => {
       const input = document.getElementById('quantityInput') as HTMLInputElement;
