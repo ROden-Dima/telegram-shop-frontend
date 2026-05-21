@@ -9,7 +9,7 @@ interface SimpleUploadProps {
 const SimpleUpload = ({ onUploadSuccess }: SimpleUploadProps) => {
   const props: UploadProps = {
     name: 'image',
-    action: 'http://localhost:3001/api/upload',
+    action: 'https://telegram-shop-backend-bbyp.onrender.com/api/upload',
     showUploadList: false,
     onChange(info) {
       console.log('Upload onChange:', info.file.status, info.file);
