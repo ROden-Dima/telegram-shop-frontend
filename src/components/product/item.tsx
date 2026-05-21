@@ -162,21 +162,39 @@ function ProductItem({
               </div>
               
               <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>Количество:</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'center' }}>
-                  <button onClick={() => {
-                    const input = document.getElementById('quantityInput') as HTMLInputElement;
-                    if (input) input.value = Math.max(1, parseInt(input.value) - 1).toString();
-                  }} style={{ width: '40px', height: '40px', fontSize: '20px', background: '#e9ecef', border: 'none', borderRadius: '12px', cursor: 'pointer' }}>−</button>
-                  <input id="quantityInput" 
-                  type="number" min="1" max="99" 
-                  defaultValue="1" style={{ width: '70px', height: '40px', textAlign: 'center !important' as any, fontSize: '16px', border: '1px solid #ccc', borderRadius: '10px' }} />
-                  <button onClick={() => {
-                    const input = document.getElementById('quantityInput') as HTMLInputElement;
-                    if (input) input.value = Math.min(99, parseInt(input.value) + 1).toString();
-                  }} style={{ width: '40px', height: '40px', fontSize: '20px', background: '#e9ecef', border: 'none', borderRadius: '12px', cursor: 'pointer' }}>+</button>
-                </div>
-              </div>
+  <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>
+    Количество:
+  </label>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'center' }}>
+    <button onClick={() => {
+      const input = document.getElementById('quantityInput') as HTMLInputElement;
+      if (input) input.value = Math.max(1, parseInt(input.value) - 1).toString();
+    }} style={{ width: '40px', height: '40px', fontSize: '20px', background: '#e9ecef', border: 'none', borderRadius: '12px', cursor: 'pointer' }}>−</button>
+    
+    <input 
+      id="quantityInput" 
+      type="number" 
+      min="1" 
+      max="99" 
+      defaultValue="1" 
+      style={{ 
+        width: '80px', 
+        height: '40px', 
+        textAlign: 'center',
+        padding: '0',
+        MozAppearance: 'textfield',
+        fontSize: '16px', 
+        border: '1px solid #ccc', 
+        borderRadius: '10px' 
+      }} 
+    />
+    
+    <button onClick={() => {
+      const input = document.getElementById('quantityInput') as HTMLInputElement;
+      if (input) input.value = Math.min(99, parseInt(input.value) + 1).toString();
+    }} style={{ width: '40px', height: '40px', fontSize: '20px', background: '#e9ecef', border: 'none', borderRadius: '12px', cursor: 'pointer' }}>+</button>
+  </div>
+</div>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <button onClick={() => {
