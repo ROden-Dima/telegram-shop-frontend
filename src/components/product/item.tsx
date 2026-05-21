@@ -194,30 +194,155 @@ function ProductItem({
         {/* ============================================ */}
         {/* Показываем только если modalVisible = true */}
         {modalVisible && (
-          <div style={{ 
-            position: 'fixed', 
-            top: '50%', 
-            left: '50%', 
-            transform: 'translate(-50%, -50%)', 
-            background: 'white', 
-            padding: '20px', 
-            zIndex: 1000, 
-            border: '1px solid #ccc', 
-            borderRadius: '8px' 
-          }}>
-            <h3>Заказ: {title}</h3>
-            <p>Цена: {safePrice} руб</p>
-            <button 
-              onClick={() => setModalVisible(false)} 
-              style={{ background: '#f0f0f0', padding: '8px 16px', borderRadius: '4px' }}
-            >
-              Закрыть
-            </button>
-          </div>
-        )}
+  <div style={{
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    background: 'rgba(0,0,0,0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000
+  }}>
+    <div style={{
+      background: 'white',
+      padding: '24px',
+      borderRadius: '20px',
+      width: '90%',
+      maxWidth: '380px',
+      boxShadow: '0 20px 35px rgba(0,0,0,0.2)'
+    }}>
+      
+      {/* Заголовок */}
+      <h3 style={{ margin: '0 0 16px 0', fontSize: '20px', fontWeight: 'bold', textAlign: 'center' }}>
+        🛒 Добавить в корзину
+      </h3>
+      
+      {/* Информация о товаре */}
+      <div style={{
+        background: '#f8f9fa',
+        padding: '12px',
+        borderRadius: '12px',
+        marginBottom: '16px',
+        textAlign: 'center'
+      }}>
+        <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px' }}>{title}</div>
+        <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#2c7da0' }}>{safePrice} ₽</div>
+      </div>
+      
+      {/* Выбор количества */}
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: '#333' }}>
+          Количество:
+        </label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'center' }}>
+          <button
+            onClick={() => {
+              const input = document.getElementById('quantityInput') as HTMLInputElement;
+              if (input) {
+                const newVal = Math.max(1, parseInt(input.value) - 1);
+                input.value = newVal.toString();
+              }
+            }}
+            style={{
+              width: '40px',
+              height: '40px',
+              fontSize: '20px',
+              background: '#e9ecef',
+              border: 'none',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            −
+          </button>
+          <input
+            id="quantityInput"
+            type="number"
+            min="1"
+            max="99"
+            defaultValue="1"
+            style={{
+              width: '70px',
+              height: '40px',
+              textAlign: 'center',
+              fontSize: '16px',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              padding: '0 8px'
+            }}
+          />
+          <button
+            onClick={() => {
+              const input = document.getElementById('quantityInput') as HTMLInputElement;
+              if (input) {
+                const newVal = Math.min(99, parseInt(input.value) + 1);
+                input.value = newVal.toString();
+              }
+            }}
+            style={{
+              width: '40px',
+              height: '40px',
+              fontSize: '20px',
+              background: '#e9ecef',
+              border: 'none',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            +
+          </button>
+        </div>
+      </div>
+      
+      {/* Кнопки действий */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <button
+          onClick={() => {
+            const quantity = parseInt((document.getElementById('quantityInput') as HTMLInputElement).value);
+            // Добавляем товар в корзину (здесь можно сохранить в localStorage или state)
+            alert(`Товар "${title}" в количестве ${quantity} шт добавлен в корзину`);
+            setModalVisible(false);
+            // TODO: перенаправить в корзину или обновить счетчик
+          }}
+          style={{
+            padding: '14px',
+            background: '#2c7da0',
+            color: 'white',
+            border: 'none',
+            borderRadius: '12px',
+            fontSize: '16px',
+            fontWeight: '500',
+            cursor: 'pointer'
+          }}
+        >
+          🛍️ В корзину
+        </button>
+        
+        <button
+          onClick={() => {
+            const quantity = parseInt((document.getElementById('quantityInput') as HTMLInputElement).value);
+            alert(`Товар "${title}" в количестве ${quantity} шт добавлен в корзину`);
+            setModalVisible(false);
+            // Продолжаем покупки (просто закрываем окно)
+          }}
+          style={{
+            padding: '14px',
+            background: '#f0f0f0',
+            color: '#333',
+            border: 'none',
+            borderRadius: '12px',
+            fontSize: '16px',
+            cursor: 'pointer'
+          }}
+        >
+          🛍️ Продолжить покупки
+        </button>
       </div>
     </div>
-  );
-}
-
-export default ProductItem;
+  </div>
+)}
