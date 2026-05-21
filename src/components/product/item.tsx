@@ -168,10 +168,14 @@ function ProductItem({
   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'center' }}>
     <button onClick={() => {
       const input = document.getElementById('quantityInput') as HTMLInputElement;
-      if (input) input.value = Math.max(1, parseInt(input.value) - 1).toString();
+      if (input) {
+        let val = parseInt(input.value, 10);
+        if (isNaN(val)) val = 1;
+        val = Math.max(1, val - 1);
+        input.value = val.toString();
+      }
     }} style={{ width: '40px', height: '40px', fontSize: '20px', background: '#e9ecef', border: 'none', borderRadius: '12px', cursor: 'pointer' }}>−</button>
     
-    {/* Оборачиваем input в div с flex-центровкой */}
     <div style={{ 
       display: 'flex', 
       alignItems: 'center', 
@@ -184,9 +188,9 @@ function ProductItem({
     }}>
       <input 
         id="quantityInput" 
-        type="number" 
-        min="1" 
-        max="99" 
+        type="text" 
+        inputMode="numeric" 
+        pattern="[0-9]*" 
         defaultValue="1" 
         style={{ 
           width: '100%',
@@ -196,16 +200,29 @@ function ProductItem({
           outline: 'none',
           fontSize: '18px',
           fontWeight: '500',
-          appearance: 'textfield',
-          WebkitAppearance: 'none',
-          MozAppearance: 'textfield'
+          background: 'transparent',
+          padding: '0'
         }} 
+        onInput={(e) => {
+          let val = e.currentTarget.value.replace(/[^0-9]/g, '');
+          if (val === '') val = '1';
+          let num = parseInt(val, 10);
+          if (isNaN(num)) num = 1;
+          if (num < 1) num = 1;
+          if (num > 99) num = 99;
+          e.currentTarget.value = num.toString();
+        }}
       />
     </div>
     
     <button onClick={() => {
       const input = document.getElementById('quantityInput') as HTMLInputElement;
-      if (input) input.value = Math.min(99, parseInt(input.value) + 1).toString();
+      if (input) {
+        let val = parseInt(input.value, 10);
+        if (isNaN(val)) val = 1;
+        val = Math.min(99, val + 1);
+        input.value = val.toString();
+      }
     }} style={{ width: '40px', height: '40px', fontSize: '20px', background: '#e9ecef', border: 'none', borderRadius: '12px', cursor: 'pointer' }}>+</button>
   </div>
 </div>
